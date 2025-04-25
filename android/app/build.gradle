@@ -1,0 +1,49 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def flutterVersionCode = project.hasProperty('flutter.versionCode') ? project.getProperty('flutter.versionCode').toInteger() : 1
+def flutterVersionName = project.hasProperty('flutter.versionName') ? project.getProperty('flutter.versionName') : "1.0"
+def flutterRoot = rootProject.ext.flutterSdkPath // Correctly access flutterSdkPath
+
+// Apply necessary plugins
+apply plugin: 'com.google.gms.google-services'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle" // Link Flutter SDK correctly
+
+android {
+    namespace = "com.example.healthcare_app"
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.example.healthcare_app"
+        minSdk = 21
+        targetSdk = 34
+        versionCode flutterVersionCode
+        versionName flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug // Replace with release signing config
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+flutter {
+    source = "../.."  // Reference Flutter source directory if needed
+}
+
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    // Add other Firebase dependencies as needed
+}
